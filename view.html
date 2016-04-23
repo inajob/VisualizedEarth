@@ -61,9 +61,9 @@ var style = {
 $.getJSON("./data/countries-detail.geojson", function(data) {
     var geojson = L.geoJson(data, {
         style: style,
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
+        //onEachFeature: function (feature, layer) {
+        //    layer.bindPopup(feature.properties.name);
+        //}
     });
     geojson.addTo(map);
 });

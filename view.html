@@ -62,6 +62,7 @@ map.setView([39.74739, 140], 3);
 L.control.zoom({
   position: 'topright'
 }).addTo(map);
+
 /*
 var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
     layers: 'nasa:bluemarble'
@@ -76,19 +77,23 @@ var style = {
   //weight:5,
   fillOpacity:0.08
 };
-//var wmsLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
-//    layers: 'River'
-//    }).addTo(map);
+var riverLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+    layers: 'River',
+    transparent:true,
+    format:'image/png'
+    });
 
-//var wmsLayer = L.tileLayer.wms('http://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WmsServer?', {
-//    layers: '5',
-//    transparent:true,
-//    format:'image/png'
-//    }).addTo(map);
+var wmsLayer = L.tileLayer.wms('http://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WmsServer?', {
+    layers: '5',
+    transparent:true,
+    format:'image/png'
+    });
 
 
+var pathLayer = L.layerGroup();
 
 $.getJSON("./data/countries-mid.geojson", function(data) {
+    var baseLayer = L.layerGroup();
     var geojson = L.geoJson(data, {
         style: style,
         //onEachFeature: function (feature, layer) {
@@ -96,13 +101,30 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
         //},
         coordsToLatLng:function(coords){return new L.LatLng(coords[1], coords[0], coords[2]);}
     });
-    geojson.addTo(map);
+    baseLayer.addLayer(geojson);
 
     var geojson2 = L.geoJson(data, {
         style: style,
         coordsToLatLng:function(coords){return new L.LatLng(coords[1], coords[0] + 360, coords[2]);}
     });
-    geojson2.addTo(map);
+    baseLayer.addLayer(geojson2);
+    baseLayer.addTo(map);
+
+    var emptyLayer = L.layerGroup();
+
+    L.control.layers(
+      {
+        layer1: baseLayer,
+      }, // base
+      {
+        path: pathLayer,
+        wms: wmsLayer,
+        river: riverLayer,
+      }, // over
+      {
+      position: 'bottomright'
+    }).addTo(map);
+
 
 });
 // point effect
@@ -113,7 +135,8 @@ function drawMarker(p){
       color: 'red',
       fillColor:'transparent',
       fillOpacity: 0.5
-    }).addTo(map);
+    });
+    pathLayer.addLayer(circle);
   }
   var circle = L.circleMarker([p[0], p[1]], {
     radius: 50,
@@ -122,7 +145,8 @@ function drawMarker(p){
     fillColor:'transparent',
     fillOpacity: 0.5,
     className:'outerCircle',
-  }).addTo(map);
+  });
+  pathLayer.addLayer(circle);
  
 }
 function drawSmallMarker(p){
@@ -132,7 +156,8 @@ function drawSmallMarker(p){
       color: 'red',
       fillColor:'transparent',
       fillOpacity: 0.5
-    }).addTo(map);
+    });
+    pathLayer.addLayer(circle);
   }
 }
 
@@ -160,7 +185,10 @@ var polyline = L.polyline(pathList, {
   className:'routePath',
   weight: 4,
   opacity: 0.3
-}).addTo(map);
+});
+pathLayer.addLayer(polyline);
+
+pathLayer.addTo(map);
 
 var mode = true;
 //setInterval(function(){

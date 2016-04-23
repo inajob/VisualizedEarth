@@ -43,7 +43,7 @@ html,body{
 </head>
 <body>
 <div id="map"></div>
-<h1 class="logo">TEST</h1>
+<h1 class="logo">InternetRoute</h1>
 <script src="" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
@@ -51,7 +51,7 @@ html,body{
 
 <script>
 var map = L.map("map", {zoomControl:false});
-map.setView([39.74739, 0], 3);
+map.setView([39.74739, 140], 3);
 
 L.control.zoom({
   position: 'topright'
@@ -67,8 +67,20 @@ var style = {
   //fillColor: "#ffffff",
   fillColor: "#74858F",
   weight:0.5,
+  //weight:5,
   fillOpacity:0.08
 };
+//var wmsLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+//    layers: 'River'
+//    }).addTo(map);
+
+//var wmsLayer = L.tileLayer.wms('http://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WmsServer?', {
+//    layers: '5',
+//    transparent:true,
+//    format:'image/png'
+//    }).addTo(map);
+
+
 
 $.getJSON("./data/countries-detail.geojson", function(data) {
     var geojson = L.geoJson(data, {
@@ -88,16 +100,29 @@ $.getJSON("./data/countries-detail.geojson", function(data) {
 
 });
 // point effect
-for(var i = 0; i < 10; i ++){
-  var circle = L.circle([35,139], 100000* i, {
-    color: 'red',
-    fillColor:'transparent',
-    fillOpacity: 0.5
-  }).addTo(map);
+function drawMarker(p){
+  for(var i = 0; i < 10; i ++){
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: i * 5,
+      color: 'red',
+      fillColor:'transparent',
+      fillOpacity: 0.5
+    }).addTo(map);
+  }
 }
 
+var pathList = [
+  [35, 139],
+  [35, 250],
+  [45, 280],
+  [60, 210]
+];
+
+drawMarker(pathList[0]);
+drawMarker(pathList[pathList.length - 1]);
+
 // line
-var polyline = L.polyline([[35, 139], [2, 130], [20, 10], [20, 10]], {
+var polyline = L.polyline(pathList, {
   color: '#fff',
   className:'routePath',
   weight: 0.5,

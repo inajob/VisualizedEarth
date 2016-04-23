@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Leaflet GeoJSON Example</title>
+<title>Visualized Earth +</title>
 <meta charset="utf-8" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,6 +68,17 @@ html,body{
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 
 <script>
+
+$.ajax({
+  type: 'GET',
+  url: 'http://210.140.161.175/parent.php?filename=parent.json',
+  dataType: 'jsonp',
+  jsonpCallback: 'CALLBACK',
+  success: function(json){
+    console.log(json);
+  }
+});
+
 var map = L.map("map", {zoomControl:false});
 map.setView([39.74739, 140], 3);
 
@@ -89,41 +100,6 @@ var style = {
   //weight:5,
   fillOpacity:0.2
 };
-var riverLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
-    layers: 'River',
-    transparent:true,
-    format:'image/png'
-    });
-var lowRainFallLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
-    layers: 'Nonreneg',
-    transparent:true,
-    format:'image/png'
-    });
-var iceLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
-    layers: 'ice',
-    transparent:true,
-    format:'image/png'
-    });
-
-    //http://sedac.ciesin.columbia.edu/maps/services
-    var nuclearLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
-      layers: 'energy:energy-pop-exposure-nuclear-plants-locations_plants',
-      transparent:true,
-      format:'image/png'
-    });
-
-    var climateEffectsLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
-      layers: 'crop-climate:crop-climate-effects-climate-global-food-production',
-      transparent:true,
-      format:'image/png'
-    });
-
-    var populationLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
-      layers: 'gpw-v3:gpw-v3-population-density-future-estimates_2015',
-      transparent:true,
-      format:'image/png'
-    });
-
 
 
 
@@ -157,18 +133,55 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     var emptyLayer = L.layerGroup();
 
+    // === external resources ==
+    var riverLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+        layers: 'River',
+        transparent:true,
+        format:'image/png'
+        });
+    var lowRainFallLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+        layers: 'Nonreneg',
+        transparent:true,
+        format:'image/png'
+        });
+    var iceLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+        layers: 'ice',
+        transparent:true,
+        format:'image/png'
+        });
+
+    //http://sedac.ciesin.columbia.edu/maps/services
+    var nuclearLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'energy:energy-pop-exposure-nuclear-plants-locations_plants',
+      transparent:true,
+      format:'image/png'
+    });
+
+    var climateEffectsLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'crop-climate:crop-climate-effects-climate-global-food-production',
+      transparent:true,
+      format:'image/png'
+    });
+
+    var populationLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'gpw-v3:gpw-v3-population-density-future-estimates_2015',
+      transparent:true,
+      format:'image/png'
+    });
+    // ==================================
+
     L.control.layers(
       {
         outline: baseLayer,
+        population2015: populationLayer,
+        "Effects of Climate Change on Global Food Production": climateEffectsLayer,
       }, // base
       {
         path: pathLayer,
         wms: wmsLayer,
         river: riverLayer,
         ice: iceLayer,
-        "Effects of Climate Change on Global Food Production": climateEffectsLayer,
         nuclear: nuclearLayer,
-        population2015: populationLayer,
         "low rain fall": lowRainFallLayer,
       }, // over
       {

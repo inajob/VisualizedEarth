@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Visualized Earth +</title>
-<meta charset="utf-8" />
+<meta charset="utf-9" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -28,7 +28,7 @@ html,body{
 }
 
 .routePath{
-  transition: stroke-dashoffset 10s linear;
+  transition: stroke-dashoffset 5s linear;
   stroke-dasharray:2 2 12 2;
   stroke-dashoffset:500;
   stroke-linecap:butt;
@@ -68,6 +68,10 @@ html,body{
   outline:none;
   padding:3px;
 }
+
+.label{
+  color:white;
+}
  
 </style>
 
@@ -98,7 +102,7 @@ $.ajax({
 });
 
 var map = L.map("map", {zoomControl:false});
-map.setView([39.74739, 140], 2.8);
+map.setView([39.74739, 140], 3);
 
 L.control.zoom({
   position: 'topright'
@@ -219,7 +223,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
       var pathList = [[35, 139]];
       var len = Math.random() * 5 + 2;
       for(var i = 0; i < len; i ++){
-        pathList.push([(Math.random() - 0.5) * 180, Math.random() * 360]);
+        pathList.push([(Math.random() - 0.5) * (180-50), Math.random() * 360]);
       }
       clearTrace();
       showRoute(pathList);
@@ -269,7 +273,7 @@ function showRoute(pathList){
         weight:4,
         color: endColor,
         fillColor:'transparent',
-        opacity: 0.4
+        opacity: 08.
       });
       pathLayer.addLayer(circle);
   
@@ -315,10 +319,14 @@ function showRoute(pathList){
         radius: 12,
         color: '#fff',
         fillColor:'transparent',
-        opacity: 0.1,
-        weight: 4
+        opacity: 0.5,
+        weight: 4,
       });
       pathLayer.addLayer(circle);
+
+      var label = L.divIcon({className: 'label', html: 'TEST'});
+      var labelMarker = L.marker([p[0] - 2, p[1] - 3], {icon: label});
+      pathLayer.addLayer(labelMarker);
   }
   
   drawMarker(pathList[pathList.length - 1],5);
@@ -345,7 +353,8 @@ showRoute(pathList);
 // ====== animation =====
 function animatePath(){
   setTimeout(function(){
-    $('.routePath').css('stroke-dashoffset', 500);
+
+    $('.routePath').css('stroke-dashoffset', 100);
     setTimeout(function(){
       $('.routePath').css('stroke-dashoffset', 0);
     },10);

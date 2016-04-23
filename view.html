@@ -83,6 +83,19 @@ var riverLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?
     transparent:true,
     format:'image/png'
     });
+var lowRainFallLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+    layers: 'Nonreneg',
+    transparent:true,
+    format:'image/png'
+    });
+var iceLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?', {
+    layers: 'ice',
+    transparent:true,
+    format:'image/png'
+    });
+
+
+
 
 var wmsLayer = L.tileLayer.wms('http://nowcoast.noaa.gov/arcgis/services/nowcoast/analysis_meteohydro_sfc_qpe_time/MapServer/WmsServer?', {
     layers: '5',
@@ -115,12 +128,14 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     L.control.layers(
       {
-        layer1: baseLayer,
+        outline: baseLayer,
       }, // base
       {
         path: pathLayer,
         wms: wmsLayer,
         river: riverLayer,
+        ice: iceLayer,
+        "low rain fall": lowRainFallLayer,
       }, // over
       {
       position: 'bottomright'

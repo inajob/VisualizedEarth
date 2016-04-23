@@ -106,17 +106,7 @@ html,body{
 
 <script>
 
-$.ajax({
-  type: 'GET',
-  url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index.php',
-  dataType: 'jsonp',
-  jsonpCallback: 'CALLBACK',
-  success: function(json){
-    console.log(json);
-  }
-});
-
-var map = L.map("map", {zoomControl:false,attributionControl:false});
+var map = L.map("map", {zoomControl:false, attributionControl:false});
 map.setView([39.74739, 140], 3);
 
 L.control.zoom({
@@ -229,17 +219,19 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
 
     // ======= trace control ======
-    function goTrace(){
+    function goTrace(route){
       var value = $('#searchText').val();
 
       // todo: trace code
-      var pathList = [[35, 139]];
+      /*
+      var route = [{latitude:35, longitude:139}];
       var len = Math.random() * 5 + 2;
       for(var i = 0; i < len; i ++){
-        pathList.push([(Math.random() - 0.5) * (180-50), Math.random() * 360]);
+        route.push({latitude:(Math.random() - 0.5) * (180-50), longitude:Math.random() * 360});
       }
+      */
       clearTrace();
-      showRoute(pathList);
+      showRoute(route);
 
       animatePath();
 
@@ -257,14 +249,39 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     });
     // ==============================
 
+    $.ajax({
+      type: 'GET',
+      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index2.php?id=2',
+      dataType: 'jsonp',
+      success: function(json){
+        var results = json.results;
+        var validRoute = [];
+        for(var i = 0; i < results.length; i ++){
+          console.log(results[i]);
+          if(results[i].latitude && results[i].longitude){
+            validRoute.push(results[i]);
+          }
+        }
+        console.log(validRoute);
+        goTrace(validRoute);
+      }
+    });
+
 });
 
 function clearTrace(){
   pathLayer.clearLayers();
 }
-
-function showRoute(pathList){
+function convertLatLon(route){
+  var result = [];
+  for(var i = 0; i < route.length; i ++){
+    result.push([parseFloat(route[i].latitude),parseFloat(route[i].longitude)]);
+  }
+  return result;
+}
+function showRoute(route){
   // line
+  var pathList = convertLatLon(route);
   var polyline = L.polyline(pathList, {
     color: '#fff',
     className:'routePath',
@@ -329,7 +346,7 @@ function showRoute(pathList){
       // pathLayer.addLayer(circle);
 
   }
-  function drawSmallMarker(p){
+  function drawSmallMarker(p, o){
       var circle = L.circleMarker([p[0], p[1]], {
         radius: 0,
         color: '#56C1FF',
@@ -355,8 +372,8 @@ function showRoute(pathList){
       });
       pathLayer.addLayer(circle);
 
-      var label = L.divIcon({className: 'label', html: 'TEST'});
-      var labelMarker = L.marker([p[0] - 2, p[1] - 3], {icon: label});
+      var label = L.divIcon({className: 'label', html: o.country_name + '/' + o.city_name + ' ' + o.hostname, 'iconSize': [100,12]});
+      var labelMarker = L.marker([p[0], p[1]], {icon: label});
       pathLayer.addLayer(labelMarker);
   }
 
@@ -364,7 +381,7 @@ function showRoute(pathList){
 
   if(pathList.length > 1){
   for(var i = 0; i < pathList.length - 1; i ++){
-    drawSmallMarker(pathList[i]);
+    drawSmallMarker(pathList[i], route[i]);
   }
 }
 
@@ -372,10 +389,10 @@ function showRoute(pathList){
 }
 
 var pathList = [
-  [35, 139],
-  [35, 250],
-  [45, 280],
-  [60, 210]
+  {latitude:35, longitude:139},
+  {latitude:35, longitude:250},
+  {latitude:45, longitude:280},
+  {latitude:60, longitude:210}
 ];
 showRoute(pathList);
 

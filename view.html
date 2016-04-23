@@ -26,9 +26,10 @@ html,body{
 
 .routePath{
   transition: stroke-dashoffset 1s ease;
-  stroke-dasharray:50;
+  stroke-dasharray:2 2 14 2;
   stroke-dashoffset:0;
-
+  stroke-linecap:butt;
+  stroke-linejoin:miter;
 }
 .logo{
   position:absolute;
@@ -101,7 +102,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 });
 // point effect
 function drawMarker(p){
-  for(var i = 0; i < 10; i ++){
+  for(var i = 0; i < 4; i ++){
     var circle = L.circleMarker([p[0], p[1]], {
       radius: i * 5,
       color: 'red',
@@ -143,8 +144,8 @@ for(var i = 1; i < pathList.length - 1; i ++){
 var polyline = L.polyline(pathList, {
   color: '#fff',
   className:'routePath',
-  weight: 0.5,
-  opacity: 1
+  weight: 4,
+  opacity: 0.3
 }).addTo(map);
 
 var mode = true;

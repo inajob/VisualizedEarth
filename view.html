@@ -28,9 +28,9 @@ html,body{
 }
 
 .routePath{
-  transition: stroke-dashoffset 1s ease;
+  transition: stroke-dashoffset 10s linear;
   stroke-dasharray:2 2 12 2;
-  stroke-dashoffset:0;
+  stroke-dashoffset:500;
   stroke-linecap:butt;
   stroke-linejoin:miter;
 }
@@ -98,7 +98,7 @@ $.ajax({
 });
 
 var map = L.map("map", {zoomControl:false});
-map.setView([39.74739, 140], 3);
+map.setView([39.74739, 140], 2.8);
 
 L.control.zoom({
   position: 'topright'
@@ -214,9 +214,18 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     // ======= trace control ======
     function goTrace(){
       var value = $('#searchText').val();
-      console.log("trace " + value);
 
       // todo: trace code
+      var pathList = [[35, 139]];
+      var len = Math.random() * 5 + 2;
+      for(var i = 0; i < len; i ++){
+        pathList.push([(Math.random() - 0.5) * 180, Math.random() * 360]);
+      }
+      clearTrace();
+      showRoute(pathList);
+
+      animatePath();
+
     }
     var keyDownCode = 0;
     $('#searchButton').click(function(e){goTrace()});
@@ -233,9 +242,95 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     
 });
 
+function clearTrace(){
+  pathLayer.clearLayers();
+}
+
+function showRoute(pathList){
+  // line
+  var polyline = L.polyline(pathList, {
+    color: '#fff',
+    className:'routePath',
+    weight: 4,
+    opacity: 0.3
+  });
+  pathLayer.addLayer(polyline);
+  
+  pathLayer.addTo(map);
+
+  //var endColor = '#50DA55';
+  var endColor = '#FF7D1D';
+  
+  
+  // point effect
+  function drawMarker(p){
+      var circle = L.circleMarker([p[0], p[1]], {
+        radius: 12,
+        weight:4,
+        color: endColor,
+        fillColor:'transparent',
+        opacity: 0.4
+      });
+      pathLayer.addLayer(circle);
+  
+      // var circle = L.circleMarker([p[0], p[1]], {
+      //   radius: 18,
+      //   weight:8,
+      //   color: endColor,
+      //   fillColor:'transparent',
+      //   opacity: 0.4,
+      //   className:'outerCircle',
+      // });
+      // pathLayer.addLayer(circle);
+  
+      var circle = L.circleMarker([p[0], p[1]], {
+        radius: 0,
+        color: endColor,
+        fillColor:'transparent',
+        opacity: 1,
+        weight: 6
+      });
+      pathLayer.addLayer(circle);
+  
+      // var circle = L.circleMarker([p[0], p[1]], {
+      //   radius: 25,
+      //   weight:2,
+      //   color: endColor,
+      //   fillColor:'transparent',
+      //   opacity: 0.4
+      // });
+      // pathLayer.addLayer(circle);
+  
+  }
+  function drawSmallMarker(p){
+      var circle = L.circleMarker([p[0], p[1]], {
+        radius: 0,
+        color: '#56C1FF',
+        fillColor:'transparent',
+        opacity: 0.8,
+        weight: 6
+      });
+      pathLayer.addLayer(circle);
+      var circle = L.circleMarker([p[0], p[1]], {
+        radius: 12,
+        color: '#fff',
+        fillColor:'transparent',
+        opacity: 0.1,
+        weight: 4
+      });
+      pathLayer.addLayer(circle);
+  }
+  
+  drawMarker(pathList[pathList.length - 1],5);
+  
+  if(pathList.length > 1){
+  for(var i = 0; i < pathList.length - 1; i ++){
+    drawSmallMarker(pathList[i]);
+  }
+}
 
 
-
+}
 
 var pathList = [
   [35, 139],
@@ -243,106 +338,21 @@ var pathList = [
   [45, 280],
   [60, 210]
 ];
+showRoute(pathList);
 
 
 
-// line
-var polyline = L.polyline(pathList, {
-  color: '#fff',
-  className:'routePath',
-  weight: 4,
-  opacity: 0.3
-});
-pathLayer.addLayer(polyline);
-
-pathLayer.addTo(map);
-
-
-
-//var endColor = '#50DA55';
-var endColor = '#FF7D1D';
-
-
-// point effect
-function drawMarker(p){
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: 12,
-      weight:4,
-      color: endColor,
-      fillColor:'transparent',
-      opacity: 0.4
-    });
-    pathLayer.addLayer(circle);
-
-    // var circle = L.circleMarker([p[0], p[1]], {
-    //   radius: 18,
-    //   weight:8,
-    //   color: endColor,
-    //   fillColor:'transparent',
-    //   opacity: 0.4,
-    //   className:'outerCircle',
-    // });
-    // pathLayer.addLayer(circle);
-
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: 0,
-      color: endColor,
-      fillColor:'transparent',
-      opacity: 1,
-      weight: 6
-    });
-    pathLayer.addLayer(circle);
-
-    // var circle = L.circleMarker([p[0], p[1]], {
-    //   radius: 25,
-    //   weight:2,
-    //   color: endColor,
-    //   fillColor:'transparent',
-    //   opacity: 0.4
-    // });
-    // pathLayer.addLayer(circle);
-
+// ====== animation =====
+function animatePath(){
+  setTimeout(function(){
+    $('.routePath').css('stroke-dashoffset', 500);
+    setTimeout(function(){
+      $('.routePath').css('stroke-dashoffset', 0);
+    },10);
+  },1);
 }
-function drawSmallMarker(p){
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: 0,
-      color: '#56C1FF',
-      fillColor:'transparent',
-      opacity: 0.8,
-      weight: 6
-    });
-    pathLayer.addLayer(circle);
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: 12,
-      color: '#fff',
-      fillColor:'transparent',
-      opacity: 0.1,
-      weight: 4
-    });
-    pathLayer.addLayer(circle);
-}
-
-
-
-
-
-
-drawMarker(pathList[pathList.length - 1],5);
-
-if(pathList.length > 1){
-for(var i = 0; i < pathList.length - 1; i ++){
-  drawSmallMarker(pathList[i]);
-}
-}
-
-
-
-var mode = true;
-//setInterval(function(){
-setTimeout(function(){
-mode = !mode;
-$('.routePath').css('stroke-dashoffset', mode?0:1000);
-},1000);
+animatePath();
+// =======================
 
 </script>
 

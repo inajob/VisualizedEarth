@@ -96,6 +96,26 @@ var iceLayer = L.tileLayer.wms('http://www.bgr.de/Service/groundwater/whymap/?',
     format:'image/png'
     });
 
+    //http://sedac.ciesin.columbia.edu/maps/services
+    var nuclearLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'energy:energy-pop-exposure-nuclear-plants-locations_plants',
+      transparent:true,
+      format:'image/png'
+    });
+
+    var climateEffectsLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'crop-climate:crop-climate-effects-climate-global-food-production',
+      transparent:true,
+      format:'image/png'
+    });
+
+    var populationLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
+      layers: 'gpw-v3:gpw-v3-population-density-future-estimates_2015',
+      transparent:true,
+      format:'image/png'
+    });
+
+
 
 
 
@@ -137,6 +157,9 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
         wms: wmsLayer,
         river: riverLayer,
         ice: iceLayer,
+        "Effects of Climate Change on Global Food Production": climateEffectsLayer,
+        nuclear: nuclearLayer,
+        population2015: populationLayer,
         "low rain fall": lowRainFallLayer,
       }, // over
       {

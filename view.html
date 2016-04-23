@@ -32,7 +32,7 @@ html,body{
   stroke-linejoin:miter;
 }
 .outerCircle{
-  stroke-dasharray:30;
+  stroke-dasharray:2;
   stroke-linecap:butt;
 }
 
@@ -107,23 +107,21 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 });
 // point effect
 function drawMarker(p){
-  for(var i = 0; i < 3; i ++){
     var circle = L.circleMarker([p[0], p[1]], {
-      radius: i * 5,
-      color: 'red',
-      fillColor:'transparent',
-      fillOpacity: 0.5
-    }).addTo(map);
-  }
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: 50,
-      weight:20,
+      radius: 12,
+      weight:4,
       color: 'red',
       fillColor:'transparent',
       fillOpacity: 0.5,
       className:'outerCircle',
     }).addTo(map);
-
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: 6,
+      weight:4,
+      color: 'red',
+      fillColor:'transparent',
+      fillOpacity: 0.2,
+    }).addTo(map);
 }
 function drawSmallMarker(p){
       var circle = L.circleMarker([p[0], p[1]], {
@@ -141,8 +139,8 @@ var pathList = [
   [60, 210]
 ];
 
-drawMarker(pathList[0]);
-drawMarker(pathList[pathList.length - 1]);
+drawMarker(pathList[0],1);
+drawMarker(pathList[pathList.length - 1],5);
 
 if(pathList.length > 1){
 for(var i = 1; i < pathList.length - 1; i ++){

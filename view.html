@@ -41,7 +41,7 @@ html,body{
   top:0px;
   left:0px;
   color:white;
-  font-size:60px;
+  font-size:40px;
   font: helvetica;
 }
 
@@ -155,6 +155,8 @@ pathLayer.addTo(map);
 
 
 
+//var endColor = '#50DA55';
+var endColor = '#FF7D1D';
 
 
 // point effect
@@ -162,7 +164,7 @@ function drawMarker(p){
     var circle = L.circleMarker([p[0], p[1]], {
       radius: 12,
       weight:4,
-      color: '#50DA55',
+      color: endColor,
       fillColor:'transparent',
       opacity: 0.4
     });
@@ -171,7 +173,7 @@ function drawMarker(p){
     // var circle = L.circleMarker([p[0], p[1]], {
     //   radius: 18,
     //   weight:8,
-    //   color: '#50DA55',
+    //   color: endColor,
     //   fillColor:'transparent',
     //   opacity: 0.4,
     //   className:'outerCircle',
@@ -180,7 +182,7 @@ function drawMarker(p){
 
     var circle = L.circleMarker([p[0], p[1]], {
       radius: 0,
-      color: '#50DA55',
+      color: endColor,
       fillColor:'transparent',
       opacity: 1,
       weight: 6
@@ -190,7 +192,7 @@ function drawMarker(p){
     // var circle = L.circleMarker([p[0], p[1]], {
     //   radius: 25,
     //   weight:2,
-    //   color: '#50DA55',
+    //   color: endColor,
     //   fillColor:'transparent',
     //   opacity: 0.4
     // });

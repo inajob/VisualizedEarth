@@ -102,6 +102,16 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 });
 // point effect
 function drawMarker(p){
+  for(var i = 0; i < 3; i ++){
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: i * 5,
+      color: 'red',
+      fillColor:'transparent',
+      fillOpacity: 0.5
+    }).addTo(map);
+  }
+}
+function drawMarker2(p){
   for(var i = 0; i < 4; i ++){
     var circle = L.circleMarker([p[0], p[1]], {
       radius: i * 5,
@@ -112,17 +122,14 @@ function drawMarker(p){
   }
 }
 function drawSmallMarker(p){
-  for(var i = 0; i < 2; i ++){
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: i * 5,
-      color: 'red',
-      fillColor:'transparent',
-      fillOpacity: 0.5
-    }).addTo(map);
+      var circle = L.circleMarker([p[0], p[1]], {
+        radius: i * 5,
+        color: 'red',
+        fillColor:'transparent',
+        fillOpacity: 0.5
+      }).addTo(map);
   }
 }
-
-
 
 var pathList = [
   [35, 139],
@@ -132,7 +139,7 @@ var pathList = [
 ];
 
 drawMarker(pathList[0]);
-drawMarker(pathList[pathList.length - 1]);
+drawMarker2(pathList[pathList.length - 1]);
 
 if(pathList.length > 1){
 for(var i = 1; i < pathList.length - 1; i ++){

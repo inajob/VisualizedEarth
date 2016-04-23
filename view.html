@@ -88,6 +88,7 @@ html,body{
 
 .label{
   color:white;
+  text-align:center;
 }
 
 </style>
@@ -251,15 +252,28 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     $.ajax({
       type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index2.php?id=2',
+      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index2.php?id=1',
       dataType: 'jsonp',
       success: function(json){
         var results = json.results;
         var validRoute = [];
+        var prePos;
+        function dist(p1,p2){
+        console.log(p1,p2)
+          return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
+        }
         for(var i = 0; i < results.length; i ++){
           console.log(results[i]);
           if(results[i].latitude && results[i].longitude){
-            validRoute.push(results[i]);
+            if(prePos != undefined){
+              if(prePos != undefined && dist(prePos, results[i]) > 5){
+                prePos = results[i]
+                validRoute.push(results[i]);
+              }
+            }else{
+              prePos = results[i]
+              validRoute.push(results[i]);
+            }
           }
         }
         console.log(validRoute);
@@ -297,7 +311,7 @@ function showRoute(route){
 
 
   // point effect
-  function drawMarker(p){
+  function drawMarker(p, o){
 
       // var circle = L.circleMarker([p[0], p[1]], {
       //   radius: 18,
@@ -336,6 +350,10 @@ function showRoute(route){
       });
       pathLayer.addLayer(circle);
 
+      var label = L.divIcon({className: 'label', html: o.country_name + '/' + o.city_name + ' ' + o.hostname, 'iconSize': [500,12]});
+      var labelMarker = L.marker([p[0], p[1]], {icon: label});
+      pathLayer.addLayer(labelMarker);
+ 
       // var circle = L.circleMarker([p[0], p[1]], {
       //   radius: 25,
       //   weight:2,
@@ -372,12 +390,12 @@ function showRoute(route){
       });
       pathLayer.addLayer(circle);
 
-      var label = L.divIcon({className: 'label', html: o.country_name + '/' + o.city_name + ' ' + o.hostname, 'iconSize': [100,12]});
+      var label = L.divIcon({className: 'label', html: o.country_name + '/' + o.city_name + ' ' + o.hostname, 'iconSize': [500,12]});
       var labelMarker = L.marker([p[0], p[1]], {icon: label});
       pathLayer.addLayer(labelMarker);
   }
 
-  drawMarker(pathList[pathList.length - 1],5);
+  drawMarker(pathList[pathList.length - 1], route[route.length - 1]);
 
   if(pathList.length > 1){
   for(var i = 0; i < pathList.length - 1; i ++){

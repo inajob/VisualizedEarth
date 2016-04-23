@@ -31,6 +31,11 @@ html,body{
   stroke-linecap:butt;
   stroke-linejoin:miter;
 }
+.outerCircle{
+  stroke-dasharray:30;
+  stroke-linecap:butt;
+}
+ 
 .logo{
   position:absolute;
   top:0px;
@@ -110,6 +115,15 @@ function drawMarker(p){
       fillOpacity: 0.5
     }).addTo(map);
   }
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: 50,
+      weight:20,
+      color: 'red',
+      fillColor:'transparent',
+      fillOpacity: 0.5,
+      className:'outerCircle',
+    }).addTo(map);
+ 
 }
 function drawSmallMarker(p){
   for(var i = 0; i < 2; i ++){

@@ -30,7 +30,7 @@ html,body{
 .routePath{
   transition: stroke-dashoffset 5s linear;
   stroke-dasharray:2 2 12 2;
-  stroke-dashoffset:500;
+  stroke-dashoffset:200;
   stroke-linecap:butt;
   stroke-linejoin:miter;
 }
@@ -188,7 +188,8 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     var populationLayer = L.tileLayer.wms('http://sedac.ciesin.org/geoserver/ows?', {
       layers: 'gpw-v3:gpw-v3-population-density-future-estimates_2015',
       transparent:true,
-      format:'image/png'
+      format:'image/png',
+      opacity:0.3
     });
     // ==================================
 
@@ -350,7 +351,7 @@ showRoute(pathList);
 function animatePath(){
   setTimeout(function(){
 
-    $('.routePath').css('stroke-dashoffset', 100);
+    $('.routePath').css('stroke-dashoffset', 200);
     setTimeout(function(){
       $('.routePath').css('stroke-dashoffset', 0);
     },10);

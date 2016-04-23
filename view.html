@@ -110,6 +110,18 @@ function drawMarker(p){
     }).addTo(map);
   }
 }
+function drawSmallMarker(p){
+  for(var i = 0; i < 2; i ++){
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: i * 5,
+      color: 'red',
+      fillColor:'transparent',
+      fillOpacity: 0.5
+    }).addTo(map);
+  }
+}
+
+
 
 var pathList = [
   [35, 139],
@@ -120,6 +132,12 @@ var pathList = [
 
 drawMarker(pathList[0]);
 drawMarker(pathList[pathList.length - 1]);
+
+if(pathList.length > 1){
+for(var i = 1; i < pathList.length - 1; i ++){
+  drawSmallMarker(pathList[i]);
+}
+}
 
 // line
 var polyline = L.polyline(pathList, {

@@ -26,7 +26,7 @@ html,body{
 
 .routePath{
   transition: stroke-dashoffset 1s ease;
-  stroke-dasharray:2 2 14 2;
+  stroke-dasharray:2 2 12 2;
   stroke-dashoffset:0;
   stroke-linecap:butt;
   stroke-linejoin:miter;
@@ -131,7 +131,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 function drawMarker(p){
     var circle = L.circleMarker([p[0], p[1]], {
       radius: 12,
-      weight:4,
+      weight:6,
       color: 'red',
       fillColor:'transparent',
       fillOpacity: 0.5
@@ -140,26 +140,42 @@ function drawMarker(p){
 
 
     var circle = L.circleMarker([p[0], p[1]], {
-      radius: 50,
-      weight:20,
+      radius: 19,
+      weight:8,
       color: 'red',
       fillColor:'transparent',
-      fillOpacity: 0.5,
+      opacity: 0.3,
       className:'outerCircle',
+    });
+    pathLayer.addLayer(circle);
+
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: 25,
+      weight:2,
+      color: 'red',
+      fillColor:'transparent',
+      opacity: 0.4
     });
     pathLayer.addLayer(circle);
 
 }
 function drawSmallMarker(p){
-  for(var i = 0; i < 2; i ++){
     var circle = L.circleMarker([p[0], p[1]], {
-      radius: i * 5,
-      color: 'red',
+      radius: 0,
+      color: '#56C1FF',
       fillColor:'transparent',
-      fillOpacity: 0.5
+      opacity: 0.8,
+      weight: 6
     });
     pathLayer.addLayer(circle);
-  }
+    var circle = L.circleMarker([p[0], p[1]], {
+      radius: 12,
+      color: '#fff',
+      fillColor:'transparent',
+      opacity: 0.1,
+      weight: 4
+    });
+    pathLayer.addLayer(circle);
 }
 
 
@@ -171,11 +187,11 @@ var pathList = [
   [60, 210]
 ];
 
-drawMarker(pathList[0],1);
+
 drawMarker(pathList[pathList.length - 1],5);
 
 if(pathList.length > 1){
-for(var i = 1; i < pathList.length - 1; i ++){
+for(var i = 0; i < pathList.length - 1; i ++){
   drawSmallMarker(pathList[i]);
 }
 }

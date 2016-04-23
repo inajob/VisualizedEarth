@@ -55,23 +55,41 @@ html,body{
   text-indent: -9999px;
   overflow: hidden;
 }
-
+#searchControl{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  width:200px;
+}
+#searchControl input{
+  background-color:rgba(255,255,255,0.2);
+  border:solid rgba(255,255,255,0.2) 2px;
+  color:white;
+  outline:none;
+  padding:3px;
+}
+ 
 </style>
 
 </head>
 <body>
 <div id="map"></div>
 <h1 class="logo">Visualize+</h1>
+<div id="searchControl">
+  <input id="searchText" type="text" />
+  <input id="searchButton" type="button" value="TRACE" />
+</div>
 <script src="" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<script src="js/leaflet-search.js"></script>
 
 <script>
 
 $.ajax({
   type: 'GET',
-  url: 'http://210.140.161.175/parent.php?filename=parent.json',
+  url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index.php',
   dataType: 'jsonp',
   jsonpCallback: 'CALLBACK',
   success: function(json){
@@ -85,6 +103,11 @@ map.setView([39.74739, 140], 3);
 L.control.zoom({
   position: 'topright'
 }).addTo(map);
+
+var pathLayer = L.layerGroup();
+
+var controlSearch = new L.Control.Search({initial: true});
+map.addControl( controlSearch );
 
 /*
 var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
@@ -111,7 +134,6 @@ var wmsLayer = L.tileLayer.wms('http://nowcoast.noaa.gov/arcgis/services/nowcoas
     });
 
 
-var pathLayer = L.layerGroup();
 
 $.getJSON("./data/countries-mid.geojson", function(data) {
     var baseLayer = L.layerGroup();
@@ -189,6 +211,26 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     }).addTo(map);
 
 
+    // ======= trace control ======
+    function goTrace(){
+      var value = $('#searchText').val();
+      console.log("trace " + value);
+
+      // todo: trace code
+    }
+    var keyDownCode = 0;
+    $('#searchButton').click(function(e){goTrace()});
+    $('#searchText').keydown(function(e){
+      keyDownCode = e.which;
+    });
+    $('#searchText').keyup(function(e){
+      if(e.which == 13 && e.which == keyDownCode){
+        // enter
+        goTrace();
+      }
+    });
+    // ==============================
+    
 });
 
 

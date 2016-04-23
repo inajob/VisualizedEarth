@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Leaflet GeoJSON Example</title>
+<meta charset="utf-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<style>
+html,body{
+  width:100%;
+  height:100%;
+  background-color:black;
+}
+#map{
+  width:100%;
+  height:100%;
+  background-color:transparent;
+}
+
+.routePath{
+  transition: stroke-dashoffset 1s ease;
+  stroke-dasharray:50;
+  stroke-dashoffset:0;
+
+}
+.routePath--animated{
+  stroke-dashoffset:0 !important;
+}
+
+</style>
+
+</head>
+<body>
+<div id="map"></div>
+<script src="" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+<script>
+var map = L.map('map').setView([39.74739, 0], 3);
+/*
+var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+    layers: 'nasa:bluemarble'
+}).addTo(map);
+*/
+
+var style = {
+  color: "#00ff00",
+  //fillColor: "#ffffff",
+  fillColor: "#ffffff",
+  weight:0.7,
+  opacity:0.5
+};
+
+$.getJSON("./data/countries.geojson", function(data) {
+    var geojson = L.geoJson(data, {
+        style: style,
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.name);
+        }
+    });
+    geojson.addTo(map);
+});
+// point effect
+for(var i = 0; i < 10; i ++){
+  var circle = L.circle([35,139], 100000* i, {
+    color: 'red',
+    fillColor:'transparent',
+    fillOpacity: 0.5
+  }).addTo(map);
+}
+
+// line
+var polyline = L.polyline([[35, 139], [2, 130], [20, 10], [20, 10]], {
+  color: 'red',
+  className:'routePath',
+}).addTo(map);
+
+var mode = true;
+//setInterval(function(){
+setTimeout(function(){
+mode = !mode;
+$('.routePath').css('stroke-dashoffset', mode?0:1000);
+},1000);
+
+</script>
+
+</body>
+</html>

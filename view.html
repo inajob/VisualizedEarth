@@ -35,7 +35,7 @@ html,body{
   stroke-dasharray:30;
   stroke-linecap:butt;
 }
- 
+
 .logo{
   position:absolute;
   top:0px;
@@ -123,17 +123,7 @@ function drawMarker(p){
       fillOpacity: 0.5,
       className:'outerCircle',
     }).addTo(map);
- 
-}
-function drawMarker2(p){
-  for(var i = 0; i < 4; i ++){
-    var circle = L.circleMarker([p[0], p[1]], {
-      radius: i * 5,
-      color: 'red',
-      fillColor:'transparent',
-      fillOpacity: 0.5
-    }).addTo(map);
-  }
+
 }
 function drawSmallMarker(p){
       var circle = L.circleMarker([p[0], p[1]], {
@@ -142,7 +132,6 @@ function drawSmallMarker(p){
         fillColor:'transparent',
         fillOpacity: 0.5
       }).addTo(map);
-  }
 }
 
 var pathList = [
@@ -153,7 +142,7 @@ var pathList = [
 ];
 
 drawMarker(pathList[0]);
-drawMarker2(pathList[pathList.length - 1]);
+drawMarker(pathList[pathList.length - 1]);
 
 if(pathList.length > 1){
 for(var i = 1; i < pathList.length - 1; i ++){

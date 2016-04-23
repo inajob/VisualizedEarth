@@ -41,7 +41,12 @@ html,body{
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 
 <script>
-var map = L.map('map').setView([39.74739, 0], 3);
+var map = L.map("map", {zoomControl:false});
+map.setView([39.74739, 0], 3);
+
+L.control.zoom({
+  position: 'topright'
+}).addTo(map);
 /*
 var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
     layers: 'nasa:bluemarble'
@@ -56,7 +61,7 @@ var style = {
   opacity:0.08
 };
 
-$.getJSON("./data/countries.geojson", function(data) {
+$.getJSON("./data/countries-detail.geojson", function(data) {
     var geojson = L.geoJson(data, {
         style: style,
         onEachFeature: function (feature, layer) {

@@ -325,6 +325,8 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
           // 空白に用いる文字列
           text.emptyCharacter = " ";
 
+          text.start();
+
         console.log(results[i]);
         if(results[i].latitude && results[i].longitude){
           if(prePos != undefined){

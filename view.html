@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 <!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,900' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'> -->
-<link href='https://fonts.googleapis.com/css?family=Quicksand:400,700,300' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Quicksand:400,700,300' rel='stylesheet' type='text/css'> -->
+<link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
 <style>
 *{
   margin:0px;
@@ -57,7 +59,7 @@ html,body{
 }
 #searchControl{
   position:absolute;
-  bottom:10px;
+  top:115px;
   left:10px;
   width:300px;
 }
@@ -87,13 +89,21 @@ html,body{
 
 #listControl{
   position:absolute;
-  top:100px;
+  top:150px;
   left:10px;
   color:white;
+  font-size: 14px;
+  font-family: 'VT323','Share Tech Mono';
 }
 #listControl a{
   color:white;
+  text-decoration: none;
 }
+
+#listControl a:hover{
+  text-decoration: underline;
+}
+
 
 
 .label{
@@ -122,6 +132,8 @@ html,body{
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+<script src="http://clockmaker.jp/labs/120203_html5_shuffletext/ShuffleText.js"></script>
 
 <script>
 
@@ -270,7 +282,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     $.ajax({
       type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index2.php?id=1',
+      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index3.php?id=99',
       dataType: 'jsonp',
       success: function(json){
         var results = json.results;
@@ -287,15 +299,20 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
         for(var i = 0; i < results.length; i ++){
           ul.append($('<li>').append(
             span = $('<span>')
-              .append($('<a>').attr('href', '#' + i)).text(results[i].hostname))
+              .append(a = $('<a>')
+              .attr('href', '#' + i)
+              .text(results[i].hostname)
+          ))
           );
           if(results[i].country_name){
-            span.append($('<span>').text(results[i].country_name))
+            span.prepend(results[i].country_name + ', ')
           }
           if(results[i].city_name){
-            span.append($('<span>').text(results[i].city_name))
+            span.prepend(results[i].city_name + ', ')
           }
- 
+
+          var shuffle = new ShuffleText(span[0]).start();
+
           console.log(results[i]);
           if(results[i].latitude && results[i].longitude){
             if(prePos != undefined){
@@ -387,7 +404,7 @@ function showRoute(route){
       var label = L.divIcon({className: 'label', html: o.country_name + '/' + o.city_name + ' ' + o.hostname, 'iconSize': [500,12]});
       var labelMarker = L.marker([p[0], p[1]], {icon: label});
       pathLayer.addLayer(labelMarker);
- 
+
       // var circle = L.circleMarker([p[0], p[1]], {
       //   radius: 25,
       //   weight:2,

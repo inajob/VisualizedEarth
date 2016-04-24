@@ -98,7 +98,7 @@ html,body{
   font-weight: 400;
 }
 #listControl a{
-  color:rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.5);
   text-decoration: none;
 }
 
@@ -296,7 +296,9 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
         return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
       }
       var ul;
+      var domain = results[0].domain_name
       $('#listControl').empty();
+      $('#listControl').append($('<h2>').text('route to ' + domain));
       $('#listControl').append(ul = $('<ul>'))
       var span;
         for(var i = 0; i < results.length; i ++){

@@ -10,8 +10,9 @@
 <!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,900' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'> -->
 <!-- <link href='https://fonts.googleapis.com/css?family=Quicksand:400,700,300' rel='stylesheet' type='text/css'> -->
-<link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'> -->
+<link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400' rel='stylesheet' type='text/css'>
 <style>
 *{
   margin:0px;
@@ -92,18 +93,19 @@ html,body{
   top:150px;
   left:10px;
   color:white;
-  font-size: 14px;
-  font-family: 'VT323','Share Tech Mono';
+  font-size: 11px;
+  font-family: 'Ubuntu Mono';
+  font-weight: 400;
 }
 #listControl a{
-  color:white;
+  color:rgba(255,255,255,0.2);
   text-decoration: none;
 }
 
 #listControl a:hover{
   text-decoration: underline;
+  color: #fff;
 }
-
 
 
 .label{
@@ -122,10 +124,7 @@ html,body{
 </div>
 
 <div id="listControl">
-<ul>
- <li><a href="#">test</a></li>
- <li><a href="#">test</a></li>
-</ul>
+<ul></ul>
 </div>
 
 <script src="" type="text/javascript"></script>
@@ -282,7 +281,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     $.ajax({
       type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index3.php?id=99',
+      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id=99',
       dataType: 'jsonp',
       success: function(json){
         var results = json.results;
@@ -311,7 +310,27 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
             span.prepend(results[i].city_name + ', ')
           }
 
-          var shuffle = new ShuffleText(span[0]).start();
+          var text = new ShuffleText(span[0])
+
+          // エフェクトの継続時間
+          text.duration = 3000;
+
+          // ランダムテキストに用いる文字列 (日本語も可)
+          text.sourceRandomCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+          // 空白に用いる文字列
+          text.emptyCharacter = " ";
+
+          text.start();
+
+
+          $('#listControl').find('li').each(function(i){
+            // function shuffle() {
+            //   var shuffle = new ShuffleText($(this).find('span').start());
+            // }
+            // window.setInterval(shuffle, (i+1)*200, true);
+          })
+
 
           console.log(results[i]);
           if(results[i].latitude && results[i].longitude){

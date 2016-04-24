@@ -85,6 +85,16 @@ html,body{
   font-weight: bold;
 }
 
+#listControl{
+  position:absolute;
+  top:100px;
+  left:10px;
+  color:white;
+}
+#listControl a{
+  color:white;
+}
+
 
 .label{
   color:white;
@@ -100,6 +110,14 @@ html,body{
 <div id="searchControl">
   <input id="searchText" type="text" /><input id="searchButton" type="button" value="ROUTE" />
 </div>
+
+<div id="listControl">
+<ul>
+ <li><a href="#">test</a></li>
+ <li><a href="#">test</a></li>
+</ul>
+</div>
+
 <script src="" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
@@ -262,7 +280,23 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
         console.log(p1,p2)
           return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
         }
+        var ul;
+        $('#listControl').empty();
+        $('#listControl').append(ul = $('<ul>'))
+        var span;
         for(var i = 0; i < results.length; i ++){
+          ul.append($('<li>').append(
+            span = $('<span>')
+              .append($('<a>').attr('href', '#' + i)).text(results[i].hostname))
+              .append($('<span>').text(results[i].city_name))
+          );
+          if(results[i].country_name){
+            span.append($('<span>').text(results[i].country_name))
+          }
+          if(results[i].city_name){
+            span.append($('<span>').text(results[i].city_name))
+          }
+ 
           console.log(results[i]);
           if(results[i].latitude && results[i].longitude){
             if(prePos != undefined){
@@ -294,8 +328,9 @@ function convertLatLon(route){
   return result;
 }
 function showRoute(route){
-  // line
+
   var pathList = convertLatLon(route);
+  // line
   var polyline = L.polyline(pathList, {
     color: '#fff',
     className:'routePath',

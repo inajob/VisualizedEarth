@@ -280,54 +280,55 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     });
     // ==============================
 
-    $.ajax({
-      type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index3.php?id=99',
-      dataType: 'jsonp',
-      success: function(json){
-        var results = json.results;
-        var validRoute = [];
-        var prePos;
-        function dist(p1,p2){
-        console.log(p1,p2)
-          return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
+    function loadJson(json){
+      // ====== load json =====
+      var results = json.results;
+      var validRoute = [];
+      var prePos;
+      function dist(p1,p2){
+      console.log(p1,p2)
+        return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
+      }
+      var ul;
+      $('#listControl').empty();
+      $('#listControl').append(ul = $('<ul>'))
+      var span;
+      for(var i = 0; i < results.length; i ++){
+        ul.append($('<li>').append(
+          span = $('<span>')
+            .append($('<a>').attr('href', '#' + i).text(results[i].hostname)))
+        );
+        if(results[i].country_name){
+          span.append($('<span>').text(results[i].country_name))
         }
-        var ul;
-        $('#listControl').empty();
-        $('#listControl').append(ul = $('<ul>'))
-        var span;
-        for(var i = 0; i < results.length; i ++){
-          ul.append($('<li>').append(
-            span = $('<span>')
-              .append(a = $('<a>')
-              .attr('href', '#' + i)
-              .text(results[i].hostname)
-          ))
-          );
-          if(results[i].country_name){
-            span.prepend(results[i].country_name + ', ')
-          }
-          if(results[i].city_name){
-            span.prepend(results[i].city_name + ', ')
-          }
-
-          var shuffle = new ShuffleText(span[0]).start();
-
-          console.log(results[i]);
-          if(results[i].latitude && results[i].longitude){
-            if(prePos != undefined){
-              if(prePos != undefined && dist(prePos, results[i]) > 5){
-                prePos = results[i]
-                validRoute.push(results[i]);
-              }
-            }else{
+        if(results[i].city_name){
+          span.append($('<span>').text(results[i].city_name))
+        }
+ 
+        console.log(results[i]);
+        if(results[i].latitude && results[i].longitude){
+          if(prePos != undefined){
+            if(prePos != undefined && dist(prePos, results[i]) > 5){
               prePos = results[i]
               validRoute.push(results[i]);
             }
+          }else{
+            prePos = results[i]
+            validRoute.push(results[i]);
           }
         }
-        console.log(validRoute);
-        goTrace(validRoute);
+      }
+      console.log(validRoute);
+      goTrace(validRoute);
+    }
+      // ===========================   
+
+    $.ajax({
+      type: 'GET',
+      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id=7',
+      dataType: 'jsonp',
+      success: function(json){
+        loadJson(json);
       }
     });
 

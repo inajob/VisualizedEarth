@@ -111,6 +111,7 @@ html,body{
 .label{
   color:white;
   text-align:center;
+  margin-top:10px !important;
 }
 
 </style>
@@ -267,34 +268,37 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     }
     var keyDownCode = 0;
-    $('#searchButton').click(function(e){goTrace()});
+    $('#searchButton').click(function(e){
+      var value = $('#searchText').val();
+      callAPI(value);
+   });
     $('#searchText').keydown(function(e){
       keyDownCode = e.which;
     });
     $('#searchText').keyup(function(e){
       if(e.which == 13 && e.which == keyDownCode){
         // enter
-        goTrace();
+
+        var value = $('#searchText').val();
+        callAPI(value);
+
       }
     });
     // ==============================
 
-    $.ajax({
-      type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id=99',
-      dataType: 'jsonp',
-      success: function(json){
-        var results = json.results;
-        var validRoute = [];
-        var prePos;
-        function dist(p1,p2){
-        console.log(p1,p2)
-          return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
-        }
-        var ul;
-        $('#listControl').empty();
-        $('#listControl').append(ul = $('<ul>'))
-        var span;
+    function loadJson(json){
+      // ====== load json =====
+      var results = json.results;
+      var validRoute = [];
+      var prePos;
+      function dist(p1,p2){
+      console.log(p1,p2)
+        return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
+      }
+      var ul;
+      $('#listControl').empty();
+      $('#listControl').append(ul = $('<ul>'))
+      var span;
         for(var i = 0; i < results.length; i ++){
           ul.append($('<li>').append(
             span = $('<span>')
@@ -321,35 +325,35 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
           // 空白に用いる文字列
           text.emptyCharacter = " ";
 
-          text.start();
+        console.log(results[i]);
+        if(results[i].latitude && results[i].longitude){
+          if(prePos != undefined){
+            if(prePos != undefined && dist(prePos, results[i]) > 5){
 
-
-          $('#listControl').find('li').each(function(i){
-            // function shuffle() {
-            //   var shuffle = new ShuffleText($(this).find('span').start());
-            // }
-            // window.setInterval(shuffle, (i+1)*200, true);
-          })
-
-
-          console.log(results[i]);
-          if(results[i].latitude && results[i].longitude){
-            if(prePos != undefined){
-              if(prePos != undefined && dist(prePos, results[i]) > 5){
-                prePos = results[i]
-                validRoute.push(results[i]);
-              }
-            }else{
               prePos = results[i]
               validRoute.push(results[i]);
             }
+          }else{
+            prePos = results[i]
+            validRoute.push(results[i]);
           }
         }
-        console.log(validRoute);
-        goTrace(validRoute);
       }
-    });
-
+      console.log(validRoute);
+      goTrace(validRoute);
+    }
+      // ===========================
+    function callAPI(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id='+id,
+        dataType: 'jsonp',
+        success: function(json){
+          loadJson(json);
+        }
+      });
+    }
+    callAPI(1); // initial data
 });
 
 function clearTrace(){
@@ -358,7 +362,11 @@ function clearTrace(){
 function convertLatLon(route){
   var result = [];
   for(var i = 0; i < route.length; i ++){
-    result.push([parseFloat(route[i].latitude),parseFloat(route[i].longitude)]);
+    var lon = parseFloat(route[i].longitude);
+    if(lon < 0){
+      lon += 360;
+    }
+    result.push([parseFloat(route[i].latitude),lon]);
   }
   return result;
 }

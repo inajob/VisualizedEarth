@@ -288,7 +288,6 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
           ul.append($('<li>').append(
             span = $('<span>')
               .append($('<a>').attr('href', '#' + i)).text(results[i].hostname))
-              .append($('<span>').text(results[i].city_name))
           );
           if(results[i].country_name){
             span.append($('<span>').text(results[i].country_name))

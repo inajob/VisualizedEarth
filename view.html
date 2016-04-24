@@ -105,10 +105,10 @@ html,body{
 }
 
 
-
 .label{
   color:white;
   text-align:center;
+  margin-top:10px !important;
 }
 
 </style>
@@ -268,14 +268,20 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
     }
     var keyDownCode = 0;
-    $('#searchButton').click(function(e){goTrace()});
+    $('#searchButton').click(function(e){
+      var value = $('#searchText').val();
+      callAPI(value);
+   });
     $('#searchText').keydown(function(e){
       keyDownCode = e.which;
     });
     $('#searchText').keyup(function(e){
       if(e.which == 13 && e.which == keyDownCode){
         // enter
-        goTrace();
+
+        var value = $('#searchText').val();
+        callAPI(value);
+
       }
     });
     // ==============================
@@ -322,15 +328,16 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
       goTrace(validRoute);
     }
       // ===========================   
-
-    $.ajax({
-      type: 'GET',
-      url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id=7',
-      dataType: 'jsonp',
-      success: function(json){
-        loadJson(json);
-      }
-    });
+    function callAPI(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id='+id,
+        dataType: 'jsonp',
+        success: function(json){
+          loadJson(json);
+        }
+      });
+    }
 
 });
 
@@ -340,7 +347,11 @@ function clearTrace(){
 function convertLatLon(route){
   var result = [];
   for(var i = 0; i < route.length; i ++){
-    result.push([parseFloat(route[i].latitude),parseFloat(route[i].longitude)]);
+    var lon = parseFloat(route[i].longitude);
+    if(lon < 0){
+      lon += 360;
+    }
+    result.push([parseFloat(route[i].latitude),lon]);
   }
   return result;
 }

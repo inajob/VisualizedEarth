@@ -96,6 +96,7 @@ html,body{
   font-size: 11px;
   font-family: 'Ubuntu Mono';
   font-weight: 400;
+  pointer-events:none;
 }
 #listControl a{
   color:rgba(255,255,255,0.5);
@@ -129,6 +130,8 @@ html,body{
 <div id="listControl">
 <ul></ul>
 </div>
+
+<div id="description">
 
 <script src="" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -240,7 +243,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
       }, // base
       {
         path: pathLayer,
-        wms: wmsLayer,
+        nowCoast: wmsLayer,
         river: riverLayer,
         ice: iceLayer,
         nuclear: nuclearLayer,

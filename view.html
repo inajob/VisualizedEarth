@@ -121,7 +121,9 @@ html,body{
 <div id="map"></div>
 <h1 class="logo">Visualize+</h1>
 <div id="searchControl">
-  <input id="searchText" type="text" /><input id="searchButton" type="button" value="ROUTE" />
+  <select id="searchSelect">
+  </select>
+  <!--<input id="searchText" type="text" /><input id="searchButton" type="button" value="ROUTE" />-->
 </div>
 
 <div id="listControl">
@@ -285,6 +287,16 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
       }
     });
     // ==============================
+    var domainList = {};
+    function loadList(json){
+      for(var i = 0; i < json.results.length; i ++){
+        domainList[json.results[i].domain] = json.results[i].id;
+      }
+      console.log(domainList);
+      for(var k in domainList){
+        $('#searchSelect').append($('<option>').text(k).val(domainList[k]));
+      }
+    }
 
     function loadJson(json){
       // ====== load json =====
@@ -292,7 +304,6 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
       var validRoute = [];
       var prePos;
       function dist(p1,p2){
-      console.log(p1,p2)
         return Math.sqrt((p1.latitude - p2.latitude)*(p1.latitude - p2.latitude) * (p1.longitude - p2.longitude)*(p1.longitude - p2.longitude));
       }
       var ul;
@@ -329,7 +340,7 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
 
           text.start();
 
-        console.log(results[i]);
+        //console.log(results[i]);
         if(results[i].latitude && results[i].longitude){
           if(prePos != undefined){
             if(prePos != undefined && dist(prePos, results[i]) > 5){
@@ -343,10 +354,30 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
           }
         }
       }
-      console.log(validRoute);
+      //console.log(validRoute);
       goTrace(validRoute);
     }
       // ===========================
+    function callList(){
+      $.ajax({
+        type: 'GET',
+        url: 'data/list.json',
+        dataType: 'json',
+        success: function(json){
+          loadList(json);
+        }
+      });
+    }
+    callList();
+ 
+    $('#searchSelect').change(function(){
+      // changed
+      var sel;
+      $('#searchSelect option:selected').each(function(){
+        sel = $(this).val();
+      });
+      callAPI(sel);
+    });
     function callAPI(id){
       $.ajax({
         type: 'GET',
@@ -366,10 +397,19 @@ function clearTrace(){
 function convertLatLon(route){
   var result = [];
   for(var i = 0; i < route.length; i ++){
+    //if(route[i].hostname != undefined){
+    //  if(route[i].hostname.indexOf('.jp.bb.gin.ntt.net') != -1){
+    //    if(route[i].country_name != 'Japan'){
+    //      route[i].latitude = 35;
+    //      route[i].longitude = 139;
+    //    }
+    //  }
+    //}
     var lon = parseFloat(route[i].longitude);
     if(lon < 0){
       lon += 360;
     }
+ 
     result.push([parseFloat(route[i].latitude),lon]);
   }
   return result;

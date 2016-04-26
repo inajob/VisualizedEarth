@@ -138,7 +138,7 @@ html,body{
 
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 
-<script src="http://clockmaker.jp/labs/120203_html5_shuffletext/ShuffleText.js"></script>
+<script src="js/ShuffleText.js"></script>
 
 <script>
 
@@ -384,8 +384,8 @@ $.getJSON("./data/countries-mid.geojson", function(data) {
     function callAPI(id){
       $.ajax({
         type: 'GET',
-        url: 'http://210-140-161-175.jp-east.compute.idcfcloud.com/index4.php?id='+id,
-        dataType: 'jsonp',
+        url: 'data/'+id +'.json',
+        dataType: 'json',
         success: function(json){
           loadJson(json);
         }

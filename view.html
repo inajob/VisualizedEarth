@@ -18,6 +18,15 @@
   margin:0px;
   padding:0px;
 }
+.tac{
+  text-align:center;
+}
+.pad{
+  padding:10px;
+}
+.small{
+  font-size:xx-small;
+}
 html,body{
   width:100%;
   height:100%;
@@ -111,11 +120,26 @@ html,body{
   color: #fff;
 }
 
-
 .label{
   color:white;
   text-align:center;
   margin-top:10px !important;
+}
+
+#inner-description{
+  margin-top:5%;
+  margin-left:auto;
+  margin-right:auto;
+  width:50%;
+  height:50%;
+  background-color:rgba(255,255,255,0.5);
+}
+#description{
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:100%;
+ height:100%;
 }
 
 </style>
@@ -135,6 +159,21 @@ html,body{
 </div>
 
 <div id="description">
+  <div id="inner-description">
+  <div class="pad">
+   Welcome to ROUTE Visualized+
+  </div>
+  <div>
+  </div>
+  <div class="tac">
+  <button class="pad" id="hide-description-button">はじめる</button>
+  </div>
+  <hr>
+  <div class="pad small">
+  この製品には MaxMind が作成した GeoLite2 データが含まれており、<a href="http://www.maxmind.com">http://www.maxmind.com</a> から入手いただけます。
+  </div>
+  </div>
+</div>
 
 <script src="" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -542,6 +581,10 @@ var pathList = [
 ];
 showRoute(pathList);
 
+
+$('#hide-description-button').click(function(){
+  $('#description').hide();
+});
 
 
 // ====== animation =====
